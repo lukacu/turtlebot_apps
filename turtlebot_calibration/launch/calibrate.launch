@@ -10,6 +10,7 @@
     <remap from="imu" to="imu/raw" />
     <remap from="scan_angle" to="scan_angle" />
     <remap from="odom" to="odom" />
+    <remap from="turtlebot_calibration/cmd_vel" to="cmd_vel_mux/input/teleop"/>
   </node>
 
 </launch>

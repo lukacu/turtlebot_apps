@@ -73,7 +73,7 @@ class CalibrateRobot:
 
         self.sub_odom = rospy.Subscriber('odom', Odometry, self.odom_cb)
         self.sub_scan = rospy.Subscriber('scan_angle', ScanAngle, self.scan_cb)
-        self.cmd_pub = rospy.Publisher('cmd_vel', Twist)
+        self.cmd_pub = rospy.Publisher('~cmd_vel', Twist)
         self.imu_time = rospy.Time()
         self.odom_time = rospy.Time()
         self.scan_time = rospy.Time()
@@ -106,7 +106,6 @@ class CalibrateRobot:
             turn_angle += delta_angle
             last_angle = self.odom_angle
         self.cmd_pub.publish(Twist())
-
         (imu_end_angle, odom_end_angle, scan_end_angle,
          imu_end_time, odom_end_time, scan_end_time) = self.sync_timestamps()
 
@@ -224,7 +223,7 @@ def writeParamsToLaunchFile(gyro, odom):
 
 
 def main():
-    rospy.init_node('scan_to_angle')
+    rospy.init_node('turtlebot_calibration')
     robot = CalibrateRobot()
     
     imu_drift = robot.imu_drift()
@@ -237,6 +236,7 @@ def main():
             imu_corr.append(imu)
         odom_corr.append(odom)
 
+    imu_res=1
     if len(imu_corr)>0:    
         imu_res = 1.0/(sum(imu_corr)/len(imu_corr))
         rospy.loginfo("Multiply the 'turtlebot_node/gyro_scale_correction' parameter with %f"%imu_res)
